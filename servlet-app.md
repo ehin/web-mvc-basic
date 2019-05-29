@@ -127,5 +127,12 @@ public class MyFilter implements Filter {
 #### DispactherServlet : 
 - dispatcherServlet은 공유해서 쓸 수가 없음.
 
+## 2-2 스프링 MVC Root Context와 Web Context
+- 계층구조 만들기
+  - Root ContextLoader :Service 
+  - WebApplicationContext : Controller.
+- dispatcherServlet 한개에 모든 컨텍스트를 등록하는 쪽으로 바뀌고 있음.
+-  서블릿 컨테이너안에 -> 서블릿 애플리케이션을 등록 (리스너, 디스패처 컨텍스트)
+-  스프링 부트 : 스프링부트 애플리케이션이 먼저 뜨고, 안에 톰캣이 있고. 서블릿은 톰캣 안에 스프링을 코드로 등록함.
 
 
