@@ -1,3 +1,5 @@
+package spring.servlet.demo;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -5,7 +7,7 @@ public class MyListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("Context init");
-        sce.getServletContext().setAttribute("name","listener");
+        sce.getServletContext().setAttribute("address","listener");
     }
 
     @Override

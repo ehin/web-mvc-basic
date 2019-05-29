@@ -1,3 +1,5 @@
+package spring.servlet.demo;
+
 import javax.servlet.*;
 import java.io.IOException;
 
@@ -16,5 +18,18 @@ public class MyFilter implements Filter {
     @Override
     public void destroy() {
         System.out.println("filter destory");
+    }
+
+    public static class MyListener implements ServletContextListener {
+        @Override
+        public void contextInitialized(ServletContextEvent sce) {
+            System.out.println("Context init");
+            sce.getServletContext().setAttribute("address","listener");
+        }
+
+        @Override
+        public void contextDestroyed(ServletContextEvent sce) {
+            System.out.println("Context destory");
+        }
     }
 }
