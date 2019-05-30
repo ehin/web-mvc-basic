@@ -124,7 +124,7 @@ public class MyFilter implements Filter {
 - 주로 다른 서블릿 컨텍스트들과 공유해서 쓸 수 있음.
 #### Servlet Web Application Servlet 
 - Root Web applicationContext를 상속 받음. 주로 web과 관련된 Controller, ViewResolver, HandlerMapping 해당 dispacterServlet에 한정된 것들.
-#### DispactherServlet : 
+#### DispatcherServlet : 
 - dispatcherServlet은 공유해서 쓸 수가 없음.
 
 ## 2-2 스프링 MVC Root Context와 Web Context
@@ -134,7 +134,6 @@ public class MyFilter implements Filter {
 - dispatcherServlet 한개에 모든 컨텍스트를 등록하는 쪽으로 바뀌고 있음.
 -  서블릿 컨테이너안에 -> 서블릿 애플리케이션을 등록 (리스너, 디스패처 컨텍스트)
 -  스프링 부트 : 스프링부트 애플리케이션이 먼저 뜨고, 안에 톰캣이 있고. 서블릿은 톰캣 안에 스프링을 코드로 등록함.
-
 
 ## 2-3 dispatcher Servlet  동작원리 @ResponseBody지정 후 
 - HandlerMapping: 핸들러를 찾아주는 인터페이스 -default 2개 
@@ -158,3 +157,70 @@ public class MyFilter implements Filter {
 - 5.(부가적으로) 예외가 발생했다면, 예외 처리 핸들러에 요청 처리를 위임한다.
 - 6.최종적으로 응답을 보낸다.
 
+## 2-5 Dispatcher Controller
+- DispatcherServlet.properties에 기본적인 인터페이스 들이 들어있음.
+
+## 3 스프링 MVC의 기본적인 인터페이스들
+- multipartResolver : 파일업로드에 사용.
+- LocaleResolver : client의 지역정보를 확인해서 MessageSource등을 키값을 리졸빙 함. `accept-language`
+- ThemeResolver : 테마 바꾸기. 
+- HandlerMapping : 요청 처리할 핸들러.
+- HandlerAdapter : MVC확장의 핵심. 핸들러를 원하는대로 만들 수 있음.
+- HandlerExceptionResolver : 에러처리 (@EXceptionResolver.)
+- RequestToViewNameTranslator: 뷰이름이 없는 경우 요청이름으로 알아서 찾아줌. 메소드이름.
+-  ViewResolver : 뷰이름으로 실제 뷰를 찾아내는 인터페이스 RequestToViewNameTranslator와 같이 찾음.
+- FlashMapManager : 리다이렉트를 할때 데이터가 또 넘어오는걸 방지하기 위해서, Get를 함. 중복 Form submit을 방지. 예 ) redirect:/events/id?201912
+혹은 request parm없이 데이터를 건내주기도 함.
+
+## 4. Spring MVC동작원리
+- 결국엔 Servlet (DispatcherServlet)
+- DispatcherServlet 초기화
+  - 1.특정 타입에 해당하는 빈을 찾는다. 
+  - 2.없으면 기본 전략(DispatcherServlet.properties) 사용
+- 스프링 부트 사용하지 않는 스프링 MVC 
+  - 서블릿 컨네이너(ex, 톰캣)에 등록한 웹 애플리케이션(WAR)에 DispatcherServlet을 등록한다. 
+  - web.xml에 서블릿 등록 
+  ```
+  <servlet>
+    <servlet-name>app</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextClass</param-name>
+      <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </init-param>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>spring.mvc.dispatcher.WebConfig</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>app</servlet-name>
+    <url-pattern>/app/*</url-pattern>
+  </servlet-mapping>
+  ```
+  
+  - WebApplicationInitializer에 자바 코드로 서블릿 등록 (스프링 3.1+, 서블릿 3.0+)
+```
+// web.xml없이 dispatcherServlet등록하기
+public class WebApplicationInit implements WebApplicationInitializer {
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.register(WebConfig.class);
+        context.refresh();
+
+        DispatcherServlet dispatcherServlet = new DispatcherServlet();
+        ServletRegistration.Dynamic app = servletContext.addServlet("app", dispatcherServlet);
+        app.addMapping("/app/*");
+    }
+}
+```
+
+ 
+- 스프링 부트를 사용하는 스프링 MVC 
+  - 자바 애플리케이션에 내장 톰캣을 만들고 그 안에 DispatcherServlet을 등록한다. 
+  - 스프링 부트 자동 설정이 자동으로 해줌. 
+  - 스프링 부트의 주관에 따라 여러 인터페이스 구현체를 빈으로 등록한다. 
+ 
+ 

@@ -31,7 +31,7 @@
     </listener>
 
   <!-- servlet.demo - HelloServlet & Spring Container -->
-  <listener>
+  <!--<listener>
     <listener-class>spring.servlet.demo.MyListener</listener-class>
   </listener>
 
@@ -44,7 +44,7 @@
     <servlet-name>hello</servlet-name>
     <url-pattern>/hello</url-pattern>
   </servlet-mapping>
-
+-->
   <!-- Dispatcher Servlet Example < 2개 만들기 -->
   <servlet>
     <servlet-name>app</servlet-name>

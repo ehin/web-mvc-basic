@@ -22,6 +22,6 @@ public class DispatcherController {
 
     @GetMapping("/sample")
     public String sample(){
-        return "/WEB-INF/sample.jsp";
+        return "sample";
     }
 }

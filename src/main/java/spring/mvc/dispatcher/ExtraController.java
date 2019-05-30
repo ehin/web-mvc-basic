@@ -11,6 +11,6 @@ public class ExtraController implements Controller {
     // modelAndView에 화면 실어주기.: simplehandler가 핸들링. Internal view resolver가 화면 찾아줌.
     @Override
     public ModelAndView handleRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-        return new ModelAndView("/WEB-INF/extra.jsp");
+        return new ModelAndView("extra");
     }
 }
