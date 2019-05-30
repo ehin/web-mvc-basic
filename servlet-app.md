@@ -89,6 +89,7 @@ public class MyFilter implements Filter {
 - 서블릿 필터와 리스너 호출순서
   - 리스너초기화 ->필터 초기화->서블릿 초기화 -> do필터 -> 서블릿 doGet -> 서블릿 destory -> 필터 destory -> 리스너 destory
 
+# 스프링 동작원리확장.
 ## 2-1 스프링 Ioc컨테이너 연동하기
 - srping-webmvc pom.xml에 의존성 추가.
 - web.xml에 스프링이 제공해주는 리스너 추가. 스프링 어플리케이션 컨텍스트를 만들어서 서블릿 컨텍스트에 등록해줌. `ContextLoaderListener`
@@ -224,7 +225,6 @@ public class WebApplicationInit implements WebApplicationInitializer {
   - 스프링 부트의 주관에 따라 여러 인터페이스 구현체를 빈으로 등록한다. 
  
  
-
  # 3. 스프링 MVC설정
  ## 3-1 Direct Setting
  - 스프링 기본설정 BEAN들 일일히 설정해 줄 수도 있음. 
@@ -269,10 +269,22 @@ public class WebConfig {
 - @Configuration 어노테이션쪽에 사용.
 - 유용한 점이. @Bean해서 처음부터 만들어주지 않아도, 조금씩 추가함으로써 바꿀 수 있음. Delegation <위임가능한 형태로 되어있음.
   1) @Configuration 파일에  `@EnableWebMvc` 등록.
-  2) `context.setServletContext(servletContext);` 
+  2)   `context.setServletContext(servletContext);` 
 ```
         // @EnableWebMvc 사용할때 필수
         // context.setServletContext(servletContext);
 ```
 
+## 3-3 WebMvcConfigure
+- `implements WebMvcConfigurer `로 구현하면 더 간편하게 할 수 있음
+``` 
+  // 3-2 SpringMvc : @EnbaleWebMvc 로 셋팅 및 커스텀
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        // 원하는 타입으로만 받을 수 있도록 - 복잡한 설정인데, SpringBoot는 간단하게 함.
+        // registry.enableContentNegotiation();
+        registry.jsp("/WEB-INF/","jsp");
+    }
+
+```
 
