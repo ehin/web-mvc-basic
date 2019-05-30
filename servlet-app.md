@@ -160,7 +160,7 @@ public class MyFilter implements Filter {
 ## 2-5 Dispatcher Controller
 - DispatcherServlet.properties에 기본적인 인터페이스 들이 들어있음.
 
-## 3 스프링 MVC의 기본적인 인터페이스들
+## 2-6 스프링 MVC의 기본적인 인터페이스들
 - multipartResolver : 파일업로드에 사용.
 - LocaleResolver : client의 지역정보를 확인해서 MessageSource등을 키값을 리졸빙 함. `accept-language`
 - ThemeResolver : 테마 바꾸기. 
@@ -172,7 +172,7 @@ public class MyFilter implements Filter {
 - FlashMapManager : 리다이렉트를 할때 데이터가 또 넘어오는걸 방지하기 위해서, Get를 함. 중복 Form submit을 방지. 예 ) redirect:/events/id?201912
 혹은 request parm없이 데이터를 건내주기도 함.
 
-## 4. Spring MVC동작원리
+## 2-7. Spring MVC동작원리
 - 결국엔 Servlet (DispatcherServlet)
 - DispatcherServlet 초기화
   - 1.특정 타입에 해당하는 빈을 찾는다. 
@@ -224,3 +224,41 @@ public class WebApplicationInit implements WebApplicationInitializer {
   - 스프링 부트의 주관에 따라 여러 인터페이스 구현체를 빈으로 등록한다. 
  
  
+ # 2. 스프링 MVC설정
+ - 스프링 기본설정 BEAN들 일일히 설정해 줄 수도 있음. 
+```
+@Configuration
+@ComponentScan(useDefaultFilters = false, includeFilters = @ComponentScan.Filter(Controller.class))
+public class WebConfig {
+    // ServletDispatcher의 Default Bean 을 사용자 정의해서 쓰기.
+
+    // HandlerMapping : Interseptor , handler의 우선순위 일일히 설정&커스텀  --> 사실상 잘안함.
+    @Bean
+    public HandlerMapping handlerMapping(){
+        RequestMappingHandlerMapping requestMappingHandlerMapping = new RequestMappingHandlerMapping();
+        // requestMappingHandlerMapping.setInterceptors();
+        requestMappingHandlerMapping.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return handlerMapping();
+    }
+
+    // HandlerAdapter 일일히 설정&커스텀 --> 사실상 잘안함.
+    @Bean
+    public HandlerAdapter handlerAdapter(){
+        RequestMappingHandlerAdapter adapter = new RequestMappingHandlerAdapter();
+        // adapter.setArgumentResolvers(); - Controller에서 파라미터 지정할 때 사용
+          // @PathVaraible - hello/{id}  , @RequestParam String name - hello/1?name=mvc
+          //  @ModelAttribute User use - 객체 hello/1?name=mvn&time=2
+        // adapter.setMessageConverters()-  @RequestBody String body - 요청 메세지
+        return  adapter;
+    }
+    
+    // ViewResolver 커스텀 : 화면은 WEB-INF만. jsp형식으로.
+    @Bean
+    public ViewResolver viewResolver(){
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/");
+        viewResolver.setSuffix(".jsp");
+        return viewResolver;
+    }
+```
+
