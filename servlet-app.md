@@ -224,7 +224,9 @@ public class WebApplicationInit implements WebApplicationInitializer {
   - 스프링 부트의 주관에 따라 여러 인터페이스 구현체를 빈으로 등록한다. 
  
  
- # 2. 스프링 MVC설정
+
+ # 3. 스프링 MVC설정
+ ## 3-1 Direct Setting
  - 스프링 기본설정 BEAN들 일일히 설정해 줄 수도 있음. 
 ```
 @Configuration
@@ -261,4 +263,16 @@ public class WebConfig {
         return viewResolver;
     }
 ```
+
+## 3-2  @EnableWebMvc 설정.
+- Annotation기반의 Spring MVC설정할 때 유용하게 사용하는 @EnableWebMvc
+- @Configuration 어노테이션쪽에 사용.
+- 유용한 점이. @Bean해서 처음부터 만들어주지 않아도, 조금씩 추가함으로써 바꿀 수 있음. Delegation <위임가능한 형태로 되어있음.
+  1) @Configuration 파일에  `@EnableWebMvc` 등록.
+  2) `context.setServletContext(servletContext);` 
+```
+        // @EnableWebMvc 사용할때 필수
+        // context.setServletContext(servletContext);
+```
+
 

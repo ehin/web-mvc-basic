@@ -6,6 +6,7 @@ import org.springframework.web.servlet.mvc.Controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+// HandlerMapping - BeanNameUrlHandlerMapping을 사용해서 컨트롤
 @org.springframework.stereotype.Controller("/extra")
 public class ExtraController implements Controller {
     // modelAndView에 화면 실어주기.: simplehandler가 핸들링. Internal view resolver가 화면 찾아줌.
